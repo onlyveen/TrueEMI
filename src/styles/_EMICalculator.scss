@@ -6,6 +6,10 @@
   display: flex;
   align-items: center;
   justify-content: center;
+  @media screen and (max-width: 991px) {
+    padding: 35px;
+    align-items: flex-start;
+  }
 }
 .container {
   max-width: 1000px;
@@ -129,6 +133,9 @@
   display: flex;
   align-items: center;
   justify-content: center;
+  @media screen and (max-width: 991px) {
+    flex-direction: column;
+  }
   .switch {
     display: block;
     .inputSwitch {
@@ -183,6 +190,9 @@
   > div {
     width: calc(40% - 32px / 2);
     min-width: calc(40% - 32px / 2);
+    @media screen and (max-width: 991px) {
+      width: 90%;
+    }
   }
   .emiCalc {
     border-radius: 32px;
@@ -193,6 +203,9 @@
   }
   .resultToggle {
     width: calc(60% - 32px / 2);
+    @media screen and (max-width: 991px) {
+      width: 100%;
+    }
     padding: 30px 0;
     height: 60vh;
     h3 {
@@ -206,14 +219,22 @@
         button {
           margin: 0;
           font-size: 14px;
-          padding: 0;
-          padding: 0 24px;
+          padding: 0 16px;
           height: 32px;
+          border-radius: 32px;
           width: auto;
-          gap: 12px;
+          gap: 8px;
           display: flex;
           align-items: center;
           justify-content: center;
+          border: solid 1px #28a745;
+          background: #fff;
+          color: #28a745;
+          font-weight: 600;
+          img {
+            height: 20px;
+            width: 20px;
+          }
         }
       }
     }
@@ -236,11 +257,18 @@
         border-radius: 16px;
         justify-content: space-between;
         margin: 32px 0;
+        flex-wrap: wrap;
         &.green {
           margin-top: 0;
         }
         &.red {
           border: solid 1px #e21616;
+          @media screen and (max-width: 991px) {
+            padding-top: 32px;
+          }
+          @media screen and (max-width: 567px) {
+            padding-top: 64px;
+          }
           > .note {
             background: #e21616;
             padding: 4px 8px;
@@ -252,6 +280,12 @@
             transform: translateY(-50%);
             font-size: 14px;
             color: #fff;
+            right: 25px;
+            text-align: center;
+            line-height: 1.5;
+            @media screen and (max-width: 991px) {
+              font-size: 12px;
+            }
           }
           .small {
             font-size: 12px;
@@ -270,12 +304,13 @@
           display: flex;
           flex-direction: column;
           color: #131313;
+          gap: 4px;
           .small {
             font-size: 14px;
             font-style: normal;
             font-weight: 400;
             line-height: normal;
-            opacity: 0.6;
+            opacity: 0.7;
           }
           .val {
             font-size: 24px;

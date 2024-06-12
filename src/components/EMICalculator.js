@@ -184,7 +184,7 @@ const EMICalculator = () => {
                         className="shareButton"
                         onClick={shareCalculation}
                       >
-                        Share EMI Details <img src="./share.svg" />
+                        Share <img src="./assets/share.svg" />
                       </button>
                     </h3>
                     <div className="green grid">
