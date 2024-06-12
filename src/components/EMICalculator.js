@@ -51,18 +51,15 @@ const EMICalculator = () => {
   };
 
   const shareCalculation = () => {
-    const message = `Check out this EMI calculation:
-        Principal: ${principal}
-        Rate: ${rate}%
-        Tenure: ${tenure} ${tenureType}
-        Monthly EMI: ${results.emi}
-        Total Payment: ${results.totalPayment}
-        Total Interest: ${results.totalInterest}
-        Processing Fee: ${results.processingFee}
-        GST on Processing Fee: ${results.gst}
-        Extra Payment: ${results.extraPayment}`;
+    let emiDetails = emiSchedule
+      .map(
+        (month, index) => `Month ${index + 1}: Total EMI - ${month.totalEmi}`
+      )
+      .join("\n");
+
+    const message = `Check out this EMI schedule:\n${emiDetails}`;
     navigator.clipboard.writeText(message);
-    alert("EMI details copied to clipboard. Share with your friends!");
+    alert("EMI schedule details copied to clipboard. Share with your friends!");
   };
 
   return (
