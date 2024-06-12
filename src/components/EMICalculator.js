@@ -57,7 +57,7 @@ const EMICalculator = () => {
       )
       .join("\n");
 
-    const message = `Check out this EMI schedule:\n${emiDetails}`;
+    const message = `Check out this EMI schedule:\n${emiDetails}\nAll the EMIs includes 18% gst on interest and Frist month includes processing fee with 18% gst`;
     navigator.clipboard.writeText(message);
     alert("EMI schedule details copied to clipboard. Share with your friends!");
   };
