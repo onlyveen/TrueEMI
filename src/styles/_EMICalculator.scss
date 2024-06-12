@@ -146,6 +146,7 @@
         text-align: center;
         border-radius: 32px;
         cursor: pointer;
+        transition: all 0.3s;
         &.active {
           color: #fff;
         }

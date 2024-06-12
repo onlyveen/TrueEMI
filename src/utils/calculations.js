@@ -1,24 +1,24 @@
 const processingFees = {
-  "american express": 2.0,
-  "au bank": 2.0,
-  axis: 1.5,
-  bobcard: 1.5,
-  canara: 1.0,
-  citibank: 2.0,
-  federal: 1.0,
-  "flipkart axis": 1.5,
-  hdfc: 1.0,
-  hsbc: 1.5,
-  icici: 2.0,
-  idbi: 1.0,
-  "idfc first": 1.5,
-  indusind: 1.5,
-  kotak: 1.5,
-  onecard: 2.5,
-  rbl: 1.5,
-  sbi: 1.5,
-  "standard chartered": 2.0,
-  "yes bank": 1.5,
+  "american express": 199,
+  "au bank": 199,
+  axis: 0,
+  bobcard: 199,
+  canara: 199,
+  citibank: 945,
+  federal: 199,
+  "flipkart axis": 199,
+  hdfc: 199,
+  hsbc: 99,
+  icici: 199,
+  idbi: 199,
+  "idfc first": 199,
+  indusind: 249,
+  kotak: 199,
+  onecard: 199,
+  rbl: 199,
+  sbi: 199,
+  "standard chartered": 945,
+  "yes bank": 199,
 };
 
 const formatCurrency = (amount) => {
@@ -32,13 +32,12 @@ export const calculateEMI = (principal, rate, tenure, cardType) => {
   const p = parseFloat(principal);
   const r = parseFloat(rate) / 12 / 100;
   const n = parseFloat(tenure);
-  const processingFeeRate = processingFees[cardType.toLowerCase()] || 0;
+  const processingFeeAmount = processingFees[cardType.toLowerCase()] || 0;
 
   const emi = (p * r * Math.pow(1 + r, n)) / (Math.pow(1 + r, n) - 1);
   const totalPayment = emi * n;
   const totalInterest = totalPayment - p;
 
-  const processingFeeAmount = p * (processingFeeRate / 100);
   const gst = processingFeeAmount * 0.18;
   const extraPayment = totalInterest + processingFeeAmount + gst;
 
@@ -57,7 +56,7 @@ export const generateEMISchedule = (principal, rate, tenure, cardType) => {
   const r = parseFloat(rate) / 12 / 100;
   const n = parseFloat(tenure);
   const emi = (p * r * Math.pow(1 + r, n)) / (Math.pow(1 + r, n) - 1);
-  const processingFeeRate = processingFees[cardType.toLowerCase()] || 0;
+  const processingFeeAmount = processingFees[cardType.toLowerCase()] || 0;
 
   const schedule = [];
   let remainingPrincipal = p;
@@ -72,7 +71,6 @@ export const generateEMISchedule = (principal, rate, tenure, cardType) => {
     let processingFeeGST = 0;
 
     if (!processingFeeAdded) {
-      const processingFeeAmount = p * (processingFeeRate / 100);
       const gstOnProcessingFee = processingFeeAmount * 0.18;
       totalEmi += processingFeeAmount + gstOnProcessingFee;
       processingFeeGST = formatCurrency(

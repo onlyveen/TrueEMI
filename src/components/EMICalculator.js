@@ -100,6 +100,7 @@ const EMICalculator = () => {
             </div>
             <div className="inputGroup">
               <label>Credit Card Type</label>
+
               <select
                 value={cardType}
                 onChange={(e) => setCardType(e.target.value)}
