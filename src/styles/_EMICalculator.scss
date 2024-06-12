@@ -242,6 +242,9 @@
     .detailedEmi {
       height: 50vh;
       overflow: auto;
+      @media screen and (max-width: 991px) {
+        height: auto;
+      }
     }
     .detailedEmi {
       .disc {
