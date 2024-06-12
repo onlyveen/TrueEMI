@@ -28,55 +28,71 @@ const formatCurrency = (amount) => {
   })}`;
 };
 
-export const calculateEMI = (principal, rate, tenure, cardType) => {
+export const calculateEMI = (principal, rate, tenure, cardType, customFee) => {
   const p = parseFloat(principal);
-  const r = parseFloat(rate) / 12 / 100;
+  const r = parseFloat(rate) / 12 / 100; // Monthly interest rate
   const n = parseFloat(tenure);
-  const processingFeeAmount = processingFees[cardType.toLowerCase()] || 0;
+  const gstRate = 0.18; // 18% GST
 
+  const processingFeeAmount =
+    customFee !== null
+      ? parseFloat(customFee)
+      : processingFees[cardType.toLowerCase()] || 0;
+
+  // Calculate monthly EMI
   const emi = (p * r * Math.pow(1 + r, n)) / (Math.pow(1 + r, n) - 1);
-  const totalPayment = emi * n;
-  const totalInterest = totalPayment - p;
+  const totalInterest = emi * n - p; // Total interest over the loan period
+  const gstOnInterest = totalInterest * gstRate; // GST on total interest
+  const gstOnProcessingFee = processingFeeAmount * gstRate; // GST on processing fee
 
-  const gst = processingFeeAmount * 0.18;
-  const extraPayment = totalInterest + processingFeeAmount + gst;
+  // Total Payment calculation according to the new requirement
+  const totalPayment =
+    emi * n + gstOnInterest + processingFeeAmount + gstOnProcessingFee;
 
   return {
     emi: formatCurrency(emi),
     totalPayment: formatCurrency(totalPayment),
     totalInterest: formatCurrency(totalInterest),
     processingFee: formatCurrency(processingFeeAmount),
-    gst: formatCurrency(gst),
-    extraPayment: formatCurrency(extraPayment),
+    gstOnProcessingFee: formatCurrency(gstOnProcessingFee),
+    gstOnInterest: formatCurrency(gstOnInterest),
+    extraPayment: formatCurrency(
+      totalInterest + processingFeeAmount + gstOnProcessingFee + gstOnInterest
+    ),
   };
 };
 
-export const generateEMISchedule = (principal, rate, tenure, cardType) => {
+export const generateEMISchedule = (
+  principal,
+  rate,
+  tenure,
+  cardType,
+  customFee
+) => {
   const p = parseFloat(principal);
-  const r = parseFloat(rate) / 12 / 100;
+  const r = parseFloat(rate) / 12 / 100; // Monthly interest rate
   const n = parseFloat(tenure);
-  const emi = (p * r * Math.pow(1 + r, n)) / (Math.pow(1 + r, n) - 1);
-  const processingFeeAmount = processingFees[cardType.toLowerCase()] || 0;
+  const processingFeeAmount =
+    customFee !== null
+      ? parseFloat(customFee)
+      : processingFees[cardType.toLowerCase()] || 0;
+  const gstRate = 0.18; // 18% GST
 
-  const schedule = [];
   let remainingPrincipal = p;
-  let processingFeeAdded = false;
+  const schedule = [];
 
   for (let month = 1; month <= n; month++) {
     const interest = remainingPrincipal * r;
-    const gstOnInterest = interest * 0.18;
-    const principalPayment = emi - interest;
+    const gstOnInterest = interest * gstRate;
+    const principalPayment =
+      (p * r * Math.pow(1 + r, n)) / (Math.pow(1 + r, n) - 1) - interest;
 
-    let totalEmi = emi;
-    let processingFeeGST = 0;
+    let totalEmi = principalPayment + interest + gstOnInterest;
 
-    if (!processingFeeAdded) {
-      const gstOnProcessingFee = processingFeeAmount * 0.18;
+    // Only add processing fee and its GST for the first month
+    if (month === 1) {
+      const gstOnProcessingFee = processingFeeAmount * gstRate;
       totalEmi += processingFeeAmount + gstOnProcessingFee;
-      processingFeeGST = formatCurrency(
-        processingFeeAmount + gstOnProcessingFee
-      );
-      processingFeeAdded = true;
     }
 
     schedule.push({
@@ -85,7 +101,10 @@ export const generateEMISchedule = (principal, rate, tenure, cardType) => {
       interest: formatCurrency(interest),
       gst: formatCurrency(gstOnInterest),
       totalEmi: formatCurrency(totalEmi),
-      processingFeeGST: month === 1 ? processingFeeGST : formatCurrency(0),
+      processingFeeGST:
+        month === 1
+          ? formatCurrency(processingFeeAmount + processingFeeAmount * gstRate)
+          : formatCurrency(0),
     });
 
     remainingPrincipal -= principalPayment;

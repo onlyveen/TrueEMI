@@ -1,5 +1,5 @@
 .mod {
-  background: rgba(0, 0, 0, 0.7);
+  background: #012010;
   height: 100vh;
   width: 100vw;
   overflow: auto;
@@ -11,17 +11,21 @@
   max-width: 1000px;
   width: 100%;
   margin: 0 auto;
-  padding: 20px;
-  border: 1px solid #ddd;
-  border-radius: 10px;
-  background-color: #ffffff;
+  border-radius: 32px;
+  color: #131313;
 }
 
 .title {
+  background: linear-gradient(90deg, #fffffe 50%, #8ac2a5 100%);
+  background-clip: text;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  text-shadow: 0px 8px 15px rgba(0, 0, 0, 0.15);
+  font-size: 32px;
+  font-style: normal;
+  font-weight: 900;
   text-align: center;
-  font-size: 24px;
-  margin-bottom: 20px;
-  color: #333;
+  line-height: normal;
 }
 
 .inputGroup {
@@ -32,7 +36,7 @@
   display: block;
   margin-bottom: 5px;
   font-weight: bold;
-  color: #555;
+  color: #fff;
 }
 
 .inputGroup input,
@@ -45,24 +49,28 @@
 }
 
 .calculateButton {
+  padding: 16px;
   width: 100%;
-  padding: 10px;
-  background-color: #007bff;
+  margin-top: 10px;
+  margin-left: auto;
   color: #fff;
+  font-size: 24px;
   border: none;
-  border-radius: 5px;
-  font-size: 16px;
+  font-size: 18px;
   cursor: pointer;
   transition: background-color 0.3s;
+  border-radius: 16px;
+  text-shadow: 0px 4px 7px rgba(0, 0, 0, 0.25);
+  border: 1px solid #54f8a1;
+  background: linear-gradient(90deg, #0ecd65 0%, #009e49 100%);
 }
 
 .calculateButton:hover {
   background-color: #0056b3;
 }
 .calculateButton:disabled {
-  background-color: #dddddd;
   position: none;
-  color: #999999;
+  opacity: 0.5;
   cursor: default;
 }
 
@@ -119,67 +127,206 @@
 
 .splitView {
   display: flex;
-  gap: 32px;
+  align-items: center;
+  justify-content: center;
   .switch {
+    display: block;
     .inputSwitch {
-      display: flex;
-      padding: 16px;
-      border: solid 1px #ddd;
-      border-radius: 64px;
+      display: inline-flex;
       position: relative;
+      padding: 8px;
+      border: solid 1px #ddd;
+      border-radius: 80px;
       &::before {
         content: "";
         position: absolute;
         width: 150px;
-        background: #6eb0f7;
+        border: 1px solid #353535;
+        background: linear-gradient(90deg, #000000 0%, #353535 100%);
         height: calc(100% - 32px);
-        top: 16px;
-        left: 16px;
+        top: 8px;
+        left: 8px;
+        height: 40px;
         border-radius: 32px;
         transition: all 0.35s;
       }
       > span {
         position: relative;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        text-align: center;
         z-index: 1;
         width: 150px;
-        padding: 8px 16px;
+        height: 40px;
         text-align: center;
         border-radius: 32px;
         cursor: pointer;
         transition: all 0.3s;
         &.active {
           color: #fff;
+          text-shadow: 0px 4px 7px rgba(0, 0, 0, 0.25);
         }
       }
     }
     input {
       opacity: 0;
       position: absolute;
-      left: -99999999;
+      left: -99999999px;
       &:checked ~ .inputSwitch {
         &::before {
-          left: calc(150px + 16px);
+          left: calc(150px + 8px);
         }
       }
     }
   }
   > div {
     width: calc(40% - 32px / 2);
+    min-width: calc(40% - 32px / 2);
+  }
+  .emiCalc {
+    border-radius: 32px;
+    color: #fff;
+    border: solid 1px #00a74d;
+    background: linear-gradient(140deg, #068540 -3.16%, #003919 100%);
+    padding: 20px;
   }
   .resultToggle {
     width: calc(60% - 32px / 2);
+    padding: 30px 0;
     height: 60vh;
-    .scheduleDetails {
+    h3 {
+      margin-bottom: 8px;
+      &.apart {
+        display: flex;
+        align-items: center;
+        width: 100%;
+        gap: 8px;
+        justify-content: space-between;
+        button {
+          margin: 0;
+          font-size: 14px;
+          padding: 0;
+          padding: 0 24px;
+          height: 32px;
+          width: auto;
+          gap: 12px;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+        }
+      }
+    }
+    .scheduleDetails,
+    .detailedEmi {
+      height: 40vh;
       overflow: auto;
-      height: 50vh;
+    }
+    .detailedEmi {
+      .disc {
+        opacity: 0.6;
+        font-size: 11px;
+      }
+      .grid {
+        display: flex;
+        position: relative;
+        align-items: center;
+        padding: 16px 32px;
+        border: solid 1px #01a24c;
+        border-radius: 16px;
+        justify-content: space-between;
+        margin: 32px 0;
+        &.green {
+          margin-top: 0;
+        }
+        &.red {
+          border: solid 1px #e21616;
+          > .note {
+            background: #e21616;
+            padding: 4px 8px;
+            border-radius: 8px;
+            margin: 0;
+            position: absolute;
+            top: 0;
+            left: 25px;
+            transform: translateY(-50%);
+            font-size: 14px;
+            color: #fff;
+          }
+          .small {
+            font-size: 12px;
+          }
+          .val {
+            font-size: 16px;
+          }
+          .red {
+            color: #e21616;
+            .val {
+              font-size: 24px;
+            }
+          }
+        }
+        p {
+          display: flex;
+          flex-direction: column;
+          color: #131313;
+          .small {
+            font-size: 14px;
+            font-style: normal;
+            font-weight: 400;
+            line-height: normal;
+            opacity: 0.6;
+          }
+          .val {
+            font-size: 24px;
+            font-style: normal;
+            font-weight: 700;
+            line-height: normal;
+          }
+        }
+      }
+    }
+    .results {
+      padding: 30px;
+      background: #fff;
     }
   }
   .inputGroup {
     display: flex;
     align-items: center;
+    flex-direction: column;
+    gap: 4px;
+    margin-bottom: 16px;
+    justify-content: flex-start;
+    input,
+    textarea,
+    select {
+      height: 50px;
+      padding: 16px;
+      background: rgba(0, 0, 0, 0.25);
+      color: #fff;
+      border: none;
+    }
+    .flexItLabel {
+      display: flex;
+      gap: 8px;
+      align-items: center;
+      input {
+        height: 20px;
+        width: 20px;
+      }
+    }
+    .flexIT {
+      display: flex;
+      width: 100%;
+      gap: 4px;
+      > * {
+        flex: 1;
+      }
+    }
     label {
-      min-width: 50%;
-      font-size: 14px;
+      width: 100%;
+      font-size: 16px;
       font-weight: normal;
     }
   }

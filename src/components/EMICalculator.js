@@ -17,20 +17,25 @@ const EMICalculator = () => {
   const [cardType, setCardType] = useState("hdfc");
   const [results, setResults] = useState(null);
   const [emiSchedule, setEmiSchedule] = useState([]);
+  const [customFee, setCustomFee] = useState("");
+  const [useCustomFee, setUseCustomFee] = useState(false);
 
   const handleCalculate = () => {
     const tenureInMonths = tenureType === "years" ? tenure * 12 : tenure;
+    const feeToUse = useCustomFee ? customFee : null; // Pass null to use predefined fee
     const calculations = calculateEMI(
       principal.replace(/[^0-9.-]+/g, ""),
       rate,
       tenureInMonths,
-      cardType
+      cardType,
+      feeToUse
     );
     const schedule = generateEMISchedule(
       principal.replace(/[^0-9.-]+/g, ""),
       rate,
       tenureInMonths,
-      cardType
+      cardType,
+      feeToUse
     );
     setResults(calculations);
     setEmiSchedule(schedule);
@@ -85,48 +90,68 @@ const EMICalculator = () => {
             </div>
             <div className="inputGroup">
               <label>Tenure</label>
-              <input
-                type="number"
-                value={tenure}
-                onChange={(e) => setTenure(e.target.value)}
-              />
-              <select
-                value={tenureType}
-                onChange={(e) => setTenureType(e.target.value)}
-              >
-                <option value="months">Months</option>
-                <option value="years">Years</option>
-              </select>
+              <div className="flexIT">
+                <input
+                  type="number"
+                  value={tenure}
+                  onChange={(e) => setTenure(e.target.value)}
+                />
+                <select
+                  value={tenureType}
+                  onChange={(e) => setTenureType(e.target.value)}
+                >
+                  <option value="months">Months</option>
+                  <option value="years">Years</option>
+                </select>
+              </div>
             </div>
             <div className="inputGroup">
               <label>Credit Card Type</label>
 
-              <select
-                value={cardType}
-                onChange={(e) => setCardType(e.target.value)}
-              >
-                <option value="american express">American Express</option>
-                <option value="au bank">AU Bank</option>
-                <option value="axis">Axis Bank</option>
-                <option value="bobcard">BOBCARD</option>
-                <option value="canara">Canara Bank</option>
-                <option value="citibank">Citibank</option>
-                <option value="federal">Federal Bank</option>
-                <option value="flipkart axis">Flipkart Axis Bank</option>
-                <option value="hdfc">HDFC Bank</option>
-                <option value="hsbc">HSBC Bank</option>
-                <option value="icici">ICICI Bank</option>
-                <option value="idbi">IDBI Bank</option>
-                <option value="idfc first">IDFC FIRST Bank</option>
-                <option value="indusind">IndusInd Bank</option>
-                <option value="kotak">Kotak Bank</option>
-                <option value="onecard">OneCard</option>
-                <option value="rbl">RBL Bank</option>
-                <option value="sbi">SBI Credit Card</option>
-                <option value="standard chartered">Standard Chartered</option>
-                <option value="yes bank">Yes Bank</option>
-              </select>
+              {useCustomFee ? (
+                <input
+                  type="number"
+                  value={customFee}
+                  onChange={(e) => setCustomFee(e.target.value)}
+                  placeholder="Enter custom fee"
+                />
+              ) : (
+                <select
+                  value={cardType}
+                  onChange={(e) => setCardType(e.target.value)}
+                >
+                  <option value="american express">American Express</option>
+                  <option value="au bank">AU Bank</option>
+                  <option value="axis">Axis Bank</option>
+                  <option value="bobcard">BOBCARD</option>
+                  <option value="canara">Canara Bank</option>
+                  <option value="citibank">Citibank</option>
+                  <option value="federal">Federal Bank</option>
+                  <option value="flipkart axis">Flipkart Axis Bank</option>
+                  <option value="hdfc">HDFC Bank</option>
+                  <option value="hsbc">HSBC Bank</option>
+                  <option value="icici">ICICI Bank</option>
+                  <option value="idbi">IDBI Bank</option>
+                  <option value="idfc first">IDFC FIRST Bank</option>
+                  <option value="indusind">IndusInd Bank</option>
+                  <option value="kotak">Kotak Bank</option>
+                  <option value="onecard">OneCard</option>
+                  <option value="rbl">RBL Bank</option>
+                  <option value="sbi">SBI Credit Card</option>
+                  <option value="standard chartered">Standard Chartered</option>
+                  <option value="yes bank">Yes Bank</option>
+                </select>
+              )}
+              <label className="flexItLabel">
+                <input
+                  type="checkbox"
+                  checked={useCustomFee}
+                  onChange={(e) => setUseCustomFee(e.target.checked)}
+                />
+                <span>Use Custom Processing Fee:</span>
+              </label>
             </div>
+
             {principal && rate && tenure && cardType ? (
               <button className="calculateButton" onClick={handleCalculate}>
                 Calculate EMI
@@ -137,8 +162,8 @@ const EMICalculator = () => {
               </button>
             )}
           </div>
-          <div className="resultToggle">
-            {results ? (
+          {results ? (
+            <div className="resultToggle">
               <div className="results">
                 <label className="switch">
                   <input
@@ -152,17 +177,54 @@ const EMICalculator = () => {
                   </span>
                 </label>
                 {!showTable ? (
-                  <div className="results">
-                    <h2>Results:</h2>
-                    <p>Monthly EMI: {results.emi}</p>
-                    <p>Total Payment: {results.totalPayment}</p>
-                    <p>Total Interest: {results.totalInterest}</p>
-                    <p>Processing Fee: {results.processingFee}</p>
-                    <p>GST on Processing Fee: {results.gst}</p>
-                    <p>Extra Payment: {results.extraPayment}</p>
-                    <button className="shareButton" onClick={shareCalculation}>
-                      Share EMI Details
-                    </button>
+                  <div className="detailedEmi">
+                    <h3 className="apart">
+                      <span>EMI Details</span>{" "}
+                      <button
+                        className="shareButton"
+                        onClick={shareCalculation}
+                      >
+                        Share EMI Details <img src="./share.svg" />
+                      </button>
+                    </h3>
+                    <div className="green grid">
+                      <p>
+                        <span className="small">Monthly EMI</span>
+                        <span className="val">{results.emi}</span>
+                      </p>
+                      <p>
+                        <span className="small">Total Payment</span>
+                        <span className="val">{results.totalPayment}</span>
+                      </p>
+                      <p>
+                        <span className="small">Total Interest</span>
+                        <span className="val">{results.totalInterest}</span>
+                      </p>
+                    </div>
+                    <div className="red grid">
+                      <p className="note">
+                        Hidden Charges (most of the banks wont inform you this)
+                      </p>
+                      <p>
+                        <span className="small">Processing Fee + GST</span>
+                        <span className="val">
+                          {results.emi} + {results.gstOnProcessingFee}
+                        </span>
+                      </p>
+                      <p>
+                        <span className="small">GST on Interest</span>
+                        <span className="val">{results.gstOnInterest}</span>
+                      </p>
+                      <p className="red">
+                        <span className="small">Extra Payment</span>
+                        <span className="val">{results.extraPayment}</span>
+                      </p>
+                    </div>
+                    <p className="disc">
+                      Note (*) : Please note that the calculated values are
+                      estimates based on the information you provided and may
+                      vary slightly due to rounding or other minor factors.
+                    </p>
                   </div>
                 ) : (
                   <div className="scheduleDetails">
@@ -194,10 +256,8 @@ const EMICalculator = () => {
                   </div>
                 )}
               </div>
-            ) : (
-              <div className="empty">EMI Details will appear hear</div>
-            )}
-          </div>
+            </div>
+          ) : null}
         </div>
       </div>
     </div>
