@@ -27,9 +27,9 @@
     text-align: center;
     line-height: 1.5;
     padding: 0 32px;
+    margin: 24px auto;
     @media screen and (max-width: 991px) {
       width: 75%;
-      margin: 24px auto;
     }
     a {
       color: #fff;
@@ -217,7 +217,7 @@
     }
   }
   .emiCalc {
-    height: 70vh;
+    min-height: 70vh;
     border-radius: 32px;
     color: #fff;
     border: solid 1px #00a74d;
