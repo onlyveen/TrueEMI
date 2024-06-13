@@ -66,8 +66,42 @@ const EMICalculator = () => {
     <div className="mod">
       <div className="container">
         <div className="splitView">
+          {!results ? (
+            <div class="header-section">
+              <img src="./assets/logo.svg" />
+              <p class="tagline">See What's Really Behind Your EMIs!</p>
+              <ul class="usp-list">
+                <li>
+                  <span>🎭</span>
+                  <strong>Unmask Hidden Fees</strong>
+                  <p>
+                    Do you find something off in you EMI? Find out every tiny
+                    charge hiding behind your monthly payments. No more gotchas!
+                  </p>
+                </li>
+                <li>
+                  <span>🤜🤛</span>
+                  <strong>BFF Budgeting</strong>
+                  <p>
+                    Say goodbye to awkward money talks with your pals. Whether
+                    you're buying that dream bike or the latest smartphone on
+                    your buddy's card, we keep it all crystal clear!
+                  </p>
+                </li>
+                <li>
+                  <span>💳</span>
+                  <strong>Track Every Rupee</strong>
+                  <p>
+                    How much extra? Track every rupee over the sticker price
+                    when you opt for EMIs. Be smart and see where your money's
+                    going!
+                  </p>
+                </li>
+              </ul>
+            </div>
+          ) : null}
           <div className="emiCalc">
-            <h1 className="title">True EMI Calculator</h1>
+            <h1 className="title">EMI Calculator</h1>
             <div className="inputGroup">
               <label>Principal Amount</label>
               <input
@@ -159,6 +193,7 @@ const EMICalculator = () => {
               </button>
             )}
           </div>
+
           {results ? (
             <div className="resultToggle">
               <div className="results">
