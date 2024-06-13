@@ -6,14 +6,34 @@ class MyDocument extends Document {
       <Html>
         <Head>
           <link rel="icon" href="./favicon.png" />
+          <title>TruEMI - See What's Really Behind Your EMIs!</title>
           <meta
             name="description"
-            content="Calculate your EMI with transparency and ease. Know the hidden charges and never fight over EMI calculations again."
+            content="Uncover hidden fees, manage shared EMI transactions with ease, and fully understand your financial commitments with TruEMI. Experience clarity with each installment."
           />
-          <meta name="viewport" content="width=device-width, initial-scale=1" />
-          <link
-            rel="stylesheet"
-            href="https://fonts.googleapis.com/css?family=Roboto:400,500,700&display=swap"
+          <meta
+            name="keywords"
+            content="EMI calculator, transparent EMI, hidden fees, TruEMI, financial clarity, Indian EMI calculator"
+          />
+          <meta
+            property="og:title"
+            content="TruEMI - See What's Really Behind Your EMIs!"
+          />
+          <meta
+            property="og:description"
+            content="Discover the true cost of your purchases with TruEMI. No hidden charges, no surprises—only clarity."
+          />
+          <meta property="og:type" content="website" />
+          <meta
+            property="og:image"
+            content="/images/emi-calculator-og-image.jpg"
+          />
+          <meta property="og:url" content="https://truemi.netlify.app" />
+          <link rel="icon" href="/favicon.ico" />
+          <link rel="canonical" href="https://truemi.netlify.app" />
+          <meta
+            name="viewport"
+            content="width=device-width, initial-scale=1.0"
           />
         </Head>
         <body>
