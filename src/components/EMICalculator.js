@@ -240,7 +240,7 @@ const EMICalculator = () => {
                       <p>
                         <span className="small">Processing Fee + GST</span>
                         <span className="val">
-                          {results.emi} + {results.gstOnProcessingFee}
+                          {results.processingFee} + {results.gstOnProcessingFee}
                         </span>
                       </p>
                       <p>
