@@ -244,11 +244,16 @@ const EMICalculator = () => {
                         </span>
                       </p>
                       <p>
-                        <span className="small">GST on Interest</span>
-                        <span className="val">{results.gstOnInterest}</span>
+                        <span className="small">Interest + GST</span>
+                        <span className="val">
+                          {results.totalInterest} + {results.gstOnInterest}
+                        </span>
                       </p>
                       <p className="red">
-                        <span className="small">Extra Payment</span>
+                        <span className="small">
+                          Extra Payment (Proc Fee incl. GST + Interest incl.
+                          GST)
+                        </span>
                         <span className="val">{results.extraPayment}</span>
                       </p>
                     </div>
