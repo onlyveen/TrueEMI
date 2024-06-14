@@ -41,8 +41,9 @@ export const calculateEMI = (principal, rate, tenure, cardType, customFee) => {
 
   // Calculate monthly EMI
   const emi = (p * r * Math.pow(1 + r, n)) / (Math.pow(1 + r, n) - 1);
-  const totalInterest = emi * n - p; // Total interest over the loan period
-  const gstOnInterest = totalInterest * gstRate; // GST on total interest
+  const interest = emi * n - p; // Total interest over the loan period
+  const gstOnInterest = interest * gstRate; // GST on total interest
+  const totalInterest = interest + gstOnInterest;
   const gstOnProcessingFee = processingFeeAmount * gstRate; // GST on processing fee
 
   // Total Payment calculation according to the new requirement
@@ -51,13 +52,18 @@ export const calculateEMI = (principal, rate, tenure, cardType, customFee) => {
 
   return {
     emi: formatCurrency(emi),
+    loan: formatCurrency(p),
     totalPayment: formatCurrency(totalPayment),
+    interest: formatCurrency(interest),
     totalInterest: formatCurrency(totalInterest),
     processingFee: formatCurrency(processingFeeAmount),
     gstOnProcessingFee: formatCurrency(gstOnProcessingFee),
     gstOnInterest: formatCurrency(gstOnInterest),
     extraPayment: formatCurrency(
-      totalInterest + processingFeeAmount + gstOnProcessingFee + gstOnInterest
+      processingFeeAmount + interest + gstOnProcessingFee + gstOnInterest
+    ),
+    finalPayment: formatCurrency(
+      processingFeeAmount + p + interest + gstOnProcessingFee + gstOnInterest
     ),
   };
 };

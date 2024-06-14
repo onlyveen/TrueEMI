@@ -62,6 +62,8 @@ const EMICalculator = () => {
     alert("EMI schedule details copied to clipboard. Share with your friends!");
   };
 
+  console.log(results);
+
   return (
     <div className="mod">
       <div className="container">
@@ -101,7 +103,14 @@ const EMICalculator = () => {
             </div>
           ) : null}
           <div className="emiCalc">
-            <h1 className="title">EMI Calculator</h1>
+            <h1 className="title">
+              {results ? (
+                <a href="/">
+                  <img src="./assets/back.svg" />
+                </a>
+              ) : null}
+              EMI Calculator
+            </h1>
             <div className="inputGroup">
               <label>Principal Amount</label>
               <input
@@ -197,72 +206,76 @@ const EMICalculator = () => {
           {results ? (
             <div className="resultToggle">
               <div className="results">
-                <label className="switch">
-                  <input
-                    type="checkbox"
-                    name="results"
-                    onChange={(e) => setShowTable(e.target.checked)}
-                  />
-                  <span className="inputSwitch">
-                    <span className={!showTable && "active"}>EMI Details</span>
-                    <span className={showTable && "active"}>EMI Schedule</span>
+                <div className="flexo">
+                  <label className="switch">
+                    <input
+                      type="checkbox"
+                      name="results"
+                      onChange={(e) => setShowTable(e.target.checked)}
+                    />
+                    <span className="inputSwitch">
+                      <span className={!showTable && "active"}>
+                        Loan Details
+                      </span>
+                      <span className={showTable && "active"}>
+                        EMI Schedule
+                      </span>
+                    </span>{" "}
+                  </label>
+                  <span className="shareButton" onClick={shareCalculation}>
+                    <img src="./assets/share.svg" />
                   </span>
-                </label>
+                </div>
                 {!showTable ? (
                   <div className="detailedEmi">
                     <h3 className="apart">
-                      <span>EMI Details</span>{" "}
-                      <button
-                        className="shareButton"
-                        onClick={shareCalculation}
-                      >
-                        Share <img src="./assets/share.svg" />
-                      </button>
+                      <span>Loan Details</span>
                     </h3>
-                    <div className="green grid">
-                      <p>
-                        <span className="small">Monthly EMI</span>
-                        <span className="val">{results.emi}</span>
-                      </p>
-                      <p>
-                        <span className="small">Total Payment</span>
-                        <span className="val">{results.totalPayment}</span>
-                      </p>
-                      <p>
-                        <span className="small">Total Interest</span>
-                        <span className="val">{results.totalInterest}</span>
-                      </p>
+                    <div className="detailsTable">
+                      <div className="detailRow">
+                        <label>Loan Amount</label>
+                        <p>{results.loan}</p>
+                      </div>
+                      <div className="detailRow">
+                        <label>Interest</label>
+                        <p>{results.interest}</p>
+                      </div>
+                      <div className="detailRow hid">
+                        <label>GST on Interest</label>
+                        <p>{results.gstOnInterest}</p>
+                      </div>
+                      <div className="detailRow hid">
+                        <label>Processing Fee</label>
+                        <p>{results.processingFee}</p>
+                      </div>
+                      <div className="detailRow hid">
+                        <label>GST on Processing Fee</label>
+                        <p>{results.gstOnProcessingFee}</p>
+                      </div>
+                      <div className="detailRow final">
+                        <label>Extra payment over Loan</label>
+                        <p>{results.extraPayment}</p>
+                      </div>
+                      <div className="detailRow emiDets">
+                        <label>
+                          <small>Monthly EMI varies between</small>
+                          <p>
+                            {emiSchedule[0].totalEmi} —{" "}
+                            {emiSchedule[emiSchedule.length - 1].totalEmi}
+                          </p>
+                        </label>
+                        <label>
+                          <small>Final Payment</small>
+                          <p>{results.finalPayment}</p>
+                        </label>
+                      </div>
                     </div>
-                    <div className="red grid">
-                      <p className="note">
-                        Hidden Charges (most of the banks wont inform you this)
-                      </p>
-                      <p>
-                        <span className="small">Processing Fee + GST</span>
-                        <span className="val">
-                          {results.processingFee} + {results.gstOnProcessingFee}
-                        </span>
-                      </p>
-                      <p>
-                        <span className="small">Interest</span>
-                        <span className="val">{results.totalInterest}</span>
-                      </p>
-                      <p>
-                        <span className="small">GST on Interest</span>
-                        <span className="val">{results.gstOnInterest}</span>
-                      </p>
-                      <p className="red">
-                        <span className="small more">
-                          Extra Payment (Proc Fee incl. GST + Interest incl.
-                          GST)
-                        </span>
-                        <span className="val">{results.extraPayment}</span>
-                      </p>
-                    </div>
+
                     <p className="disc">
                       Note (*) : Please note that the calculated values are
-                      estimates based on the information you provided and may
-                      vary slightly due to rounding or other minor factors.
+                      estimates based on the information you provided,
+                      processing Fee running in market and may vary slightly due
+                      to rounding or other minor factors.
                     </p>
                   </div>
                 ) : (
