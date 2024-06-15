@@ -17,7 +17,7 @@ const EMICalculator = () => {
   const [cardType, setCardType] = useState("hdfc");
   const [results, setResults] = useState(null);
   const [emiSchedule, setEmiSchedule] = useState([]);
-  const [customFee, setCustomFee] = useState("");
+  const [customFee, setCustomFee] = useState(0);
   const [useCustomFee, setUseCustomFee] = useState(false);
 
   useEffect(() => {
@@ -122,25 +122,27 @@ const EMICalculator = () => {
       window.location.pathname
     }?${params.toString()}`;
 
-    const emiDetails = emiSchedule
-      .map(
-        (month, index) => `Month ${index + 1}: Total EMI - ${month.totalEmi}`
-      )
-      .join("\n");
+    // const emiDetails = emiSchedule
+    //   .map(
+    //     (month, index) => `Month ${index + 1}: Total EMI - ${month.totalEmi}`
+    //   )
+    //   .join("\n");
 
-    const message = `Check out this EMI schedule:\n${emiDetails}\nAll the EMIs include 18% GST on interest, and the first month includes processing fee with 18% GST.`;
+    // const message = `Check out this EMI schedule:\n${emiDetails}\nAll the EMIs include 18% GST on interest, and the first month includes processing fee with 18% GST.`;
 
     if (navigator.share) {
       navigator
         .share({
           title: "EMI Calculation Results",
-          text: message,
+          // text: message,
           url: shareUrl,
         })
-        .then(() => console.log("Share successful"))
+        .then(() => console.log("Check Share successful"))
         .catch((error) => console.error("Error sharing", error));
     } else {
-      navigator.clipboard.writeText(`${message}\n${shareUrl}`);
+      navigator.clipboard.writeText(
+        `Check EMI Calculation Results\n${shareUrl}`
+      );
       alert(
         "EMI schedule details copied to clipboard. Share with your friends!"
       );
