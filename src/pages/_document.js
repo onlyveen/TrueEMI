@@ -31,6 +31,10 @@ class MyDocument extends Document {
           <meta property="og:url" content="https://truemi.netlify.app" />
           <link rel="icon" href="/favicon.ico" />
           <link rel="canonical" href="https://truemi.netlify.app" />
+          <meta
+            name="viewport"
+            content="width=device-width, initial-scale=1.0"
+          />
         </Head>
         <body>
           <Main />

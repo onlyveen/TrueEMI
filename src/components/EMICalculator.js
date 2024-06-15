@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { calculateEMI, generateEMISchedule } from "../utils/calculations";
 
 const formatCurrency = (amount) => {
@@ -20,6 +20,62 @@ const EMICalculator = () => {
   const [customFee, setCustomFee] = useState("");
   const [useCustomFee, setUseCustomFee] = useState(false);
 
+  useEffect(() => {
+    const urlParams = new URLSearchParams(window.location.search);
+    const initialPrincipal = urlParams.get("principal");
+    const initialRate = urlParams.get("rate");
+    const initialTenure = urlParams.get("tenure");
+    const initialTenureType = urlParams.get("tenureType");
+    const initialCardType = urlParams.get("cardType");
+    const initialCustomFee = urlParams.get("customFee");
+    const initialUseCustomFee = urlParams.get("useCustomFee") === "true";
+
+    if (initialPrincipal) setPrincipal(formatCurrency(initialPrincipal));
+    if (initialRate) setRate(initialRate);
+    if (initialTenure) setTenure(initialTenure);
+    if (initialTenureType) setTenureType(initialTenureType);
+    if (initialCardType) setCardType(initialCardType);
+    if (initialCustomFee) setCustomFee(initialCustomFee);
+    if (initialUseCustomFee) setUseCustomFee(initialUseCustomFee);
+
+    if (initialPrincipal && initialRate && initialTenure && initialCardType) {
+      const tenureInMonths =
+        initialTenureType === "years" ? initialTenure * 12 : initialTenure;
+      const feeToUse = initialUseCustomFee ? initialCustomFee : null; // Pass null to use predefined fee
+      const calculations = calculateEMI(
+        initialPrincipal,
+        initialRate,
+        tenureInMonths,
+        initialCardType,
+        feeToUse
+      );
+      const schedule = generateEMISchedule(
+        initialPrincipal,
+        initialRate,
+        tenureInMonths,
+        initialCardType,
+        feeToUse
+      );
+      setResults(calculations);
+      setEmiSchedule(schedule);
+    }
+  }, []);
+
+  const updateURL = () => {
+    const params = new URLSearchParams({
+      principal: principal.replace(/[^0-9.-]+/g, ""),
+      rate,
+      tenure,
+      tenureType,
+      cardType,
+      customFee,
+      useCustomFee,
+    });
+
+    const newUrl = `${window.location.pathname}?${params.toString()}`;
+    window.history.pushState({}, "", newUrl);
+  };
+
   const handleCalculate = () => {
     const tenureInMonths = tenureType === "years" ? tenure * 12 : tenure;
     const feeToUse = useCustomFee ? customFee : null; // Pass null to use predefined fee
@@ -39,6 +95,7 @@ const EMICalculator = () => {
     );
     setResults(calculations);
     setEmiSchedule(schedule);
+    updateURL();
   };
 
   const handlePrincipalChange = (e) => {
@@ -51,28 +108,54 @@ const EMICalculator = () => {
   };
 
   const shareCalculation = () => {
-    let emiDetails = emiSchedule
+    const params = new URLSearchParams({
+      principal: principal.replace(/[^0-9.-]+/g, ""),
+      rate,
+      tenure,
+      tenureType,
+      cardType,
+      customFee,
+      useCustomFee,
+    });
+
+    const shareUrl = `${window.location.origin}${
+      window.location.pathname
+    }?${params.toString()}`;
+
+    const emiDetails = emiSchedule
       .map(
         (month, index) => `Month ${index + 1}: Total EMI - ${month.totalEmi}`
       )
       .join("\n");
 
-    const message = `Check out this EMI schedule:\n${emiDetails}\nAll the EMIs includes 18% gst on interest and Frist month includes processing fee with 18% gst`;
-    navigator.clipboard.writeText(message);
-    alert("EMI schedule details copied to clipboard. Share with your friends!");
-  };
+    const message = `Check out this EMI schedule:\n${emiDetails}\nAll the EMIs include 18% GST on interest, and the first month includes processing fee with 18% GST.`;
 
-  console.log(results);
+    if (navigator.share) {
+      navigator
+        .share({
+          title: "EMI Calculation Results",
+          text: message,
+          url: shareUrl,
+        })
+        .then(() => console.log("Share successful"))
+        .catch((error) => console.error("Error sharing", error));
+    } else {
+      navigator.clipboard.writeText(`${message}\n${shareUrl}`);
+      alert(
+        "EMI schedule details copied to clipboard. Share with your friends!"
+      );
+    }
+  };
 
   return (
     <div className="mod">
       <div className="container">
         <div className="splitView">
           {!results ? (
-            <div class="header-section">
+            <div className="header-section">
               <img src="./assets/logo.svg" />
-              <p class="tagline">See What's Really Behind Your EMIs!</p>
-              <ul class="usp-list">
+              <p className="tagline">See What's Really Behind Your EMIs!</p>
+              <ul className="usp-list">
                 <li>
                   <span>🎭</span>
                   <strong>Unmask Hidden Fees</strong>
@@ -188,11 +271,10 @@ const EMICalculator = () => {
                   checked={useCustomFee}
                   onChange={(e) => setUseCustomFee(e.target.checked)}
                 />
-                <span>Use Custom Processing Fee:</span>
+                <span>Use Custom Processing Fee</span>
               </label>
             </div>
-
-            {principal && rate && tenure && cardType ? (
+            {principal && rate && tenure ? (
               <button className="calculateButton" onClick={handleCalculate}>
                 Calculate EMI
               </button>
