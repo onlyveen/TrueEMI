@@ -399,7 +399,7 @@ const EMICalculator = () => {
       <div className="container footer">
         <p>
           Created with ❤️ by{" "}
-          <a href="://praveengorakala.com" target="_blank">
+          <a href="//praveengorakala.com" target="_blank">
             Pra<b>VeeN</b> Gorakala
           </a>{" "}
           & Chat GPT
